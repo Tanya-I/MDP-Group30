@@ -133,9 +133,9 @@ def generate_stm_commands_from_path(path: List[Tuple[float, float, float]],
             if abs(angle_diff) > 5:
                 angle_int = int(abs(angle_diff))
                 if angle_diff > 0:
-                    commands.append(f"a{angle_int}")  # Turn right
+                    commands.append(f"d{angle_int}")  # Turn right
                 else:
-                    commands.append(f"d{angle_int}")  # Turn left
+                    commands.append(f"a{angle_int}")  # Turn left
                 current_heading = segment_heading
             
             # Move forward
@@ -148,9 +148,9 @@ def generate_stm_commands_from_path(path: List[Tuple[float, float, float]],
     if abs(angle_diff) > 5:
         angle_int = int(abs(angle_diff))
         if angle_diff > 0:
-            commands.append(f"a{angle_int}")
-        else:
             commands.append(f"d{angle_int}")
+        else:
+            commands.append(f"a{angle_int}")
     
     return commands
 
