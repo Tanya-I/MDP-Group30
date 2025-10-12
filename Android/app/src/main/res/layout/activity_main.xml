@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/MainFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="12dp"
+    android:background="#FFFFFF">
+
+    <!-- Connection Status Section -->
+    <TextView
+        android:id="@+id/connected_device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:gravity="end"
+        android:text="No Device Connected"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@id/connection_indicator"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/connection_indicator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="#FF0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Control Buttons Section -->
+    <Button
+        android:id="@+id/wk8button"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/rounded_start_button_purple"
+        android:text="Start Week 8"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/connected_device" />
+
+    <Button
+        android:id="@+id/wk9button"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/rounded_start_button_purple"
+        android:text="Start Week 9"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintStart_toEndOf="@id/wk8button"
+        app:layout_constraintTop_toTopOf="@id/wk8button" />
+
+    <!-- Grid Complete Button -->
+    <Button
+        android:id="@+id/gridCompleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/rounded_start_button_purple"
+        android:text="Grid Complete"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintStart_toEndOf="@id/wk9button"
+        app:layout_constraintTop_toTopOf="@id/wk8button" />
+
+    <Button
+        android:id="@+id/connect"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:background="@drawable/rounded_start_button_green"
+        android:text="Connect"
+        android:textColor="#FFFFFF"
+        android:textSize="12sp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/wk8button" />
+
+    <!-- Timer Section -->
+    <TextView
+        android:id="@+id/wk8timer"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/wk8button"
+        app:layout_constraintStart_toStartOf="@id/wk8button"
+        app:layout_constraintTop_toBottomOf="@id/wk8button" />
+
+    <TextView
+        android:id="@+id/wk9timer"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="00:00:00"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/wk9button"
+        app:layout_constraintStart_toStartOf="@id/wk9button"
+        app:layout_constraintTop_toBottomOf="@id/wk9button" />
+
+    <!-- Robot Position Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/robot_position_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="6dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:cardBackgroundColor="#F8F9FA"
+        app:layout_constraintEnd_toStartOf="@+id/object_placement_card"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wk8timer"
+        app:layout_constraintWidth_percent="0.48">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/robot_position_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current Robot Position"
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/robot_position_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="(1, 1, N)"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Current Object Placement Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/object_placement_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="3dp"
+        app:cardBackgroundColor="#F0F8FF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/robot_position_card"
+        app:layout_constraintTop_toTopOf="@+id/robot_position_card"
+        app:layout_constraintWidth_percent="0.48">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/object_placement_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Current Object Placement"
+                android:textColor="#666666"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/object_placement_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="None"
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Status Box Label -->
+    <TextView
+        android:id="@+id/message_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Status Box"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/robot_position_card" />
+
+    <!-- Chat Box Label -->
+    <TextView
+        android:id="@+id/chat_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="6dp"
+        android:text="Chat Box"
+        android:textColor="#666666"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/message_box_card"
+        app:layout_constraintTop_toBottomOf="@id/robot_position_card" />
+
+    <!-- Status Box  -->
+    <TextView
+        android:id="@+id/message_box_card"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="6dp"
+        android:background="#FFFFFF"
+        android:elevation="3dp"
+        android:gravity="top|start"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        android:text="Status messages will appear here..."
+        android:textColor="#666666"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/chat_input_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message_label"
+        app:layout_constraintWidth_percent="0.48" />
+
+    <!-- Chat Box -->
+    <LinearLayout
+        android:id="@+id/chat_input_container"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="6dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:elevation="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/message_box_card"
+        app:layout_constraintTop_toBottomOf="@id/chat_label"
+        app:layout_constraintWidth_percent="0.48">
+
+        <!-- Chat EditText -->
+        <EditText
+            android:id="@+id/chat_box_card"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="top|start"
+            android:inputType="textMultiLine|textCapSentences"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:text=""
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:hint="Type your message here..."
+            android:textColorHint="#888888" />
+
+        <!-- Send Button -->
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="4dp"
+            android:background="@drawable/rounded_start_button_green"
+            android:text="Send"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="12dp"
+            android:elevation="15dp" />
+
+    </LinearLayout>
+
+    <!-- Grid Container -->
+    <FrameLayout
+        android:id="@+id/grid_container"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message_box_card">
+
+        <!-- Grid Layout with Fixed Cell Structure -->
+        <TableLayout
+            android:id="@+id/coordinate_grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F5F5F5"
+            android:stretchColumns="*">
+
+            <!-- Top row: Empty corner + X coordinates (0-19) -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <!-- Empty corner cell -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <!-- Custom Grid View  -->
+        <com.example.vroomvroom.CustomGridView
+            android:id="@+id/grid"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Clear Path Button  -->
+    <Button
+        android:id="@+id/clear_path_button"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="12dp"
+        android:background="@android:color/holo_red_light"
+        android:text="Clear Path"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintEnd_toStartOf="@+id/obstacles_card"
+        app:layout_constraintTop_toBottomOf="@id/grid_container" />
+
+    <!-- Obstacles Section - DOUBLED IN SIZE for 8 objects -->
+    <View
+        android:id="@+id/obstacles_card"
+        android:layout_width="200dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="120dp"
+        android:background="#E0E0E0"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/grid_container" />
+
+    <!-- FIRST ROW OF OBJECTS (1-4) -->
+    <!-- Object 1 Container -->
+    <FrameLayout
+        android:id="@+id/object1"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toStartOf="@id/obstacles_card"
+        app:layout_constraintTop_toTopOf="@id/obstacles_card">
+
+        <ImageView
+            android:id="@+id/object1_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object1_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object1_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Object 2 Container -->
+    <FrameLayout
+        android:id="@+id/object2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toEndOf="@id/object1"
+        app:layout_constraintTop_toTopOf="@id/object1">
+
+        <ImageView
+            android:id="@+id/object2_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object2_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object2_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Object 3 Container -->
+    <FrameLayout
+        android:id="@+id/object3"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toEndOf="@id/object2"
+        app:layout_constraintTop_toTopOf="@id/object1">
+
+        <ImageView
+            android:id="@+id/object3_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object3_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object3_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Object 4 Container -->
+    <FrameLayout
+        android:id="@+id/object4"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toEndOf="@id/object3"
+        app:layout_constraintTop_toTopOf="@id/object1">
+
+        <ImageView
+            android:id="@+id/object4_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object4_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object4_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- SECOND ROW OF OBJECTS (5-8) -->
+    <!-- Object 5 Container -->
+    <FrameLayout
+        android:id="@+id/object5"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toStartOf="@id/object1"
+        app:layout_constraintTop_toBottomOf="@id/object1">
+
+        <ImageView
+            android:id="@+id/object5_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object5_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object5_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="5"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Object 6 Container -->
+    <FrameLayout
+        android:id="@+id/object6"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toEndOf="@id/object5"
+        app:layout_constraintTop_toTopOf="@id/object5">
+
+        <ImageView
+            android:id="@+id/object6_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object6_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object6_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="6"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Object 7 Container -->
+    <FrameLayout
+        android:id="@+id/object7"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toEndOf="@id/object6"
+        app:layout_constraintTop_toTopOf="@id/object5">
+
+        <ImageView
+            android:id="@+id/object7_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object7_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object7_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="7"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Object 8 Container -->
+    <FrameLayout
+        android:id="@+id/object8"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="6dp"
+        android:elevation="3dp"
+        app:layout_constraintStart_toEndOf="@id/object7"
+        app:layout_constraintTop_toTopOf="@id/object5">
+
+        <ImageView
+            android:id="@+id/object8_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_default_form" />
+
+        <View
+            android:id="@+id/object8_direction"
+            android:layout_width="20dp"
+            android:layout_height="3dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="2dp"
+            android:background="#FFFF00" />
+
+        <TextView
+            android:id="@+id/object8_number"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="8"
+            android:textColor="#FFFFFF"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
+
+    <!-- Robot Car -->
+    <ImageView
+        android:id="@+id/robot_car"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/robot_car"
+        android:scaleType="fitCenter"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="@id/obstacles_card"
+        app:layout_constraintEnd_toEndOf="@id/obstacles_card"
+        app:layout_constraintTop_toTopOf="@id/obstacles_card" />
+
+    <!-- Directional Control Buttons Container -->
+    <FrameLayout
+        android:id="@+id/dpad_container"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="100dp"
+        app:layout_constraintBottom_toBottomOf="@id/obstacles_card"
+        app:layout_constraintStart_toEndOf="@id/obstacles_card"
+        app:layout_constraintTop_toTopOf="@id/obstacles_card"
+        app:layout_constraintVertical_bias="0.4">
+
+        <!-- Up Button -->
+        <Button
+            android:id="@+id/btn_up"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="5dp"
+            android:background="#2196F3"
+            android:text="↑"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Left Button -->
+        <Button
+            android:id="@+id/btn_left"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginStart="5dp"
+            android:background="#2196F3"
+            android:text="←"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Center (NOT IN USE) -->
+        <View
+            android:id="@+id/dpad_center"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="#90CAF9" />
+
+        <!-- Right Button -->
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginEnd="5dp"
+            android:background="#2196F3"
+            android:text="→"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Down Button -->
+        <Button
+            android:id="@+id/btn_down"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="5dp"
+            android:background="#2196F3"
+            android:text="↓"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </FrameLayout>
+
+    <!-- Coordinate Preview -->
+    <TextView
+        android:id="@+id/coord_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFEB3B"
+        android:elevation="8dp"
+        android:padding="6dp"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/message_box_card"
+        app:layout_constraintEnd_toEndOf="@id/message_box_card"
+        app:layout_constraintStart_toStartOf="@id/message_box_card"
+        app:layout_constraintTop_toTopOf="@+id/message_box_card" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

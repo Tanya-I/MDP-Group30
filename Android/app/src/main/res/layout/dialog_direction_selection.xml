@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Set Direction"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/dialog_item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Item: Robot"
+        android:textSize="14sp"
+        android:textColor="#666666"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Direction buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- North button -->
+        <Button
+            android:id="@+id/button_north"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:text="N"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/rounded_direction_button"
+            android:textColor="#FFFFFF"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Middle row: West, East -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/button_west"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:text="W"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_direction_button"
+                android:textColor="#FFFFFF"
+                android:layout_marginEnd="80dp" />
+
+            <Button
+                android:id="@+id/button_east"
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:text="E"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_direction_button"
+                android:textColor="#FFFFFF" />
+
+        </LinearLayout>
+
+        <!-- South button -->
+        <Button
+            android:id="@+id/button_south"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:text="S"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/rounded_direction_button"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+
+    <!-- Cancel button -->
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
+        android:text="Cancel"
+        android:textSize="14sp"
+        android:background="@drawable/rounded_cancel_button"
+        android:textColor="#666666" />
+
+</LinearLayout>

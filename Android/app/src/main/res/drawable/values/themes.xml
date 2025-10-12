@@ -1,0 +1,57 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="GreyTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/gy2</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/gy1</item>
+        <item name="colorSecondary">@color/gy3</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorAccent">@color/gy4</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+    <style name="OrangeTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/o2</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/o1</item>
+        <item name="colorSecondary">@color/o3</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorAccent">@color/o4</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+    <style name="PinkTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/pk2</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/pk1</item>
+        <item name="colorSecondary">@color/pk3</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorAccent">@color/pk4</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+    <style name="RedTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/r2</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/r1</item>
+        <item name="colorSecondary">@color/r3</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorAccent">@color/r4</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+    <style name="BlueTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/b2</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/b1</item>
+        <item name="colorSecondary">@color/b3</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorAccent">@color/b4</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+    <style name="PurpleTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/p2</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/p1</item>
+        <item name="colorSecondary">@color/p3</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorAccent">@color/p4</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+</resources>

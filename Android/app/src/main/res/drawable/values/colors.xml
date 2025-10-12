@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="obstacle_green">#08b454</color>
+    <color name="obstacle_red">#d82c2c</color>
+    <color name="obstacle_blue">#48acd4</color>
+    <color name="obstacle_yellow">#f8ec2c</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+
+    <color name="p1">#3e0074</color>
+    <color name="p2">#7100d2</color>
+    <color name="p3">#8900ff</color>
+    <color name="p4">#cfa3ff</color>
+
+    <color name="b1">#005073</color>
+    <color name="b2">#107dac</color>
+    <color name="b3">#189AD3</color>
+    <color name="b4">#cceefc</color>
+
+    <color name="pk1">#ff0081</color>
+    <color name="pk2">#ff48a5</color>
+    <color name="pk3">#ff77bc</color>
+    <color name="pk4">#ffcae5</color>
+
+    <color name="r1">#c13126</color>
+    <color name="r2">#ce3b2b</color>
+    <color name="r3">#ed3f36</color>
+    <color name="r4">#f4c2c2</color>
+
+    <color name="o1">#e68507</color>
+    <color name="o2">#ffab08</color>
+    <color name="o3">#ffb720</color>
+    <color name="o4">#ffdc91</color>
+
+    <color name="gy1">#636065</color>
+    <color name="gy2">#7a777d</color>
+    <color name="gy3">#8e8b90</color>
+    <color name="gy4">#e3dee3</color>
+</resources>
