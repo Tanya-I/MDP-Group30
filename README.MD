@@ -29,7 +29,7 @@ The **Image Recognition** folder contains the **basic image recognition model** 
 
 It includes the PyTorch model weights (`v1.pt`) and the Python script `recognition_local.py` for local testing and inference.
 
-#### Requirements
+### Requirements
 
 > **Note:** Ensure that both `recognition_local.py` and `v1.pt` are in the same folder when running the script.
 
@@ -39,7 +39,7 @@ Before running the script, make sure you have the required dependencies installe
 pip install ultralytics opencv-python numpy
 ```
 
-#### Running the Model Locally
+### Running the Model Locally
 
 You can test the model on your local machine by running the following command inside the `Image Recognition` directory:
 
@@ -161,5 +161,144 @@ Install required packages for RPI scripts:
 ```bash
 pip install opencv-python flask pyserial pybluez requests
 ```
+
+---
+
+## Task 1 Module
+
+The **Task 1** folder contains the complete system integration for the robot navigation and image recognition task. This includes the RPI server, PC client, path planning, and vision modules.
+
+### System Architecture
+
+The system consists of two main components:
+
+1. **RPI Server** (`rpi_server.py`) - Hosted on Raspberry Pi
+   - Receives obstacle positions from Android via Bluetooth
+   - Communicates with STM32 for robot control
+   - Captures images using Pi camera
+   - Provides HTTP API for PC client
+
+2. **PC Client** (`pc_client.py`) - Runs on PC connected to RPI WiFi
+   - Receives obstacles from RPI
+   - Plans optimal path using `planner_integration.py`
+   - Performs image recognition using YOLO model
+   - Sends navigation commands to robot via RPI
+
+### File Descriptions
+
+#### Core Files
+
+**`rpi_server.py`**
+- Main server running on Raspberry Pi
+- Bluetooth server for Android communication
+- HTTP server for PC API (port 5000)
+- STM32 serial communication
+- Camera capture interface
+- Handles obstacle management and task coordination
+
+**`pc_client.py`**
+- PC-side client for task execution
+- Connects to RPI via HTTP
+- Integrates path planning and vision modules
+- Coordinates robot navigation and image recognition
+- Saves captured images to `./rpi_downloads/`
+
+**`mdp_2_sim.py`**
+- Full path planning simulator with visualization
+- Dubins path planning with forward-only constraints
+- Lattice A* fallback for complex scenarios
+- Interactive GUI for testing and tuning
+- Ackermann steering model (no point turns)
+
+**`planner_integration.py`**
+- Simplified path planning module for production use
+- Extracted from simulator for real robot integration
+- Generates STM command sequences from planned paths
+- Optimizes obstacle visit order
+- Used by `pc_client.py` for navigation
+
+**`vision.py`**
+- YOLO-based image recognition module
+- Offline mode (no internet required)
+- Supports 40 symbols (0-9, A-Z, arrows, stop)
+- Generates annotated images and tiled galleries
+- Maps detected symbols to image IDs
+
+### Running the System
+
+#### Step 1: Start RPI Server (on Raspberry Pi)
+
+```bash
+cd Task\ 1
+python rpi_server.py
+```
+
+The server will:
+- Start Bluetooth server (waiting for Android)
+- Start HTTP server on port 5000
+- Connect to STM32 via serial
+- Initialize camera
+
+#### Step 2: Connect Android App
+
+- Pair Android device with Raspberry Pi
+- Open MDP Android app
+- Send obstacle positions via Bluetooth
+- Send `GRID_COMPLETE` when done
+
+#### Step 3: Run PC Client (on PC connected to RPI WiFi)
+
+```bash
+cd Task\ 1
+python pc_client.py
+```
+
+The client will:
+- Connect to RPI at `192.168.30.1:5000`
+- Wait for obstacles from Android (via RPI)
+- Prompt to start task
+- Execute navigation and recognition
+
+### Configuration
+
+Edit these variables in the respective files:
+
+**`pc_client.py`:**
+```python
+DEFAULT_RPI_HOST = '192.168.30.1'  # RPI IP address
+YOLO_MODEL_PATH = 'v1.pt'          # Path to YOLO model
+YOLO_CONFIDENCE = 0.6              # Detection confidence threshold
+```
+
+**`rpi_server.py`:**
+```python
+WLAN_PORT = 5000                   # HTTP server port
+STM_PORT = '/dev/ttyACM0'          # STM32 serial port
+BT_CHANNEL = 1                     # Bluetooth RFCOMM channel
+```
+
+### Dependencies
+
+Install on PC:
+```bash
+pip install requests opencv-python numpy ultralytics
+```
+
+Install on Raspberry Pi:
+```bash
+pip install opencv-python flask pyserial pybluez
+```
+
+For simulator:
+```bash
+pip install pygame shapely
+```
+
+### Output Files
+
+When running the system, images are saved to:
+- `./rpi_downloads/` - Raw captured images
+- `./rpi_downloads/annotated/` - Annotated detection images
+- `./rpi_downloads/annotated/gallery.jpg` - Tiled gallery of all detections
 
 ---
