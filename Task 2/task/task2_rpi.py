@@ -219,17 +219,23 @@ def stm_loop():
                     print(f"[STM] Ready signal #{ready_count} received")
                         
                         # Flush old frames to ensure a fresh capture
+                    # Flush old frames to ensure a fresh capture
+                    
                     for _ in range(3):
                         cap.grab()
 
-                        success, frame = cap.read()
-                        if success:
-                            _, buffer = cv2.imencode('.jpg', frame)
-                            global last_photo_bytes
-                            last_photo_bytes = buffer.tobytes()
-                            print(f"[CAM] Fresh photo captured ({len(last_photo_bytes)} bytes)")
-                        else:
-                            print("[CAM] Failed to capture photo")
+                    # Small delay to let sensor refresh (helps with Pi Camera)
+                    time.sleep(0.05)
+
+                    success, frame = cap.read()
+                    if success:
+                        _, buffer = cv2.imencode('.jpg', frame)
+                        global last_photo_bytes
+                        last_photo_bytes = buffer.tobytes()
+                        print(f"[CAM] Fresh photo captured ({len(last_photo_bytes)} bytes)")
+                    else:
+                        print("[CAM] Failed to capture photo")
+
 
 
                     # After max_ready_count, we can reset or continue
