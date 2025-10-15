@@ -441,11 +441,11 @@ def process_one_cycle(cycle_num, model, last_hash):
         
         # Save annotated image
         annotated_path = os.path.join(ANNOTATED_DIR, f"cycle{cycle_num}_{timestamp}_annotated.jpg")
-        detected_symbols = save_annotated_frame(img_bgr, boxes, names, annotated_path, CONF_THRESHOLD,cycle_num)
+        detected_symbols = save_annotated_frame(img_bgr, boxes, names, annotated_path, CONF_THRESHOLD)
         print(f"[PC] Saved annotated image: {annotated_path}")
         
         # Save individual clips for gallery
-        save_individual_clips(img_bgr, boxes, names, GALLERY_DIR, CONF_THRESHOLD)
+        save_individual_clips(img_bgr, boxes, names, GALLERY_DIR, CONF_THRESHOLD,cycle_num)
     
     # Step 5: Decide command
     command = decide_command(detected_symbols)
