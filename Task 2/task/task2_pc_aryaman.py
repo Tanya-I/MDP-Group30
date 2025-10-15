@@ -267,7 +267,7 @@ def save_individual_clips(img_bgr, boxes, names, gallery_dir, conf_threshold, cy
         save_path = os.path.join(gallery_dir, f"{symbol_key}.jpg")
         cv2.imwrite(save_path, single)
         print(f"[PC]      Saved gallery clip: {symbol_key}.jpg")
-        
+
 def make_tiled_gallery(gallery_dir, out_path, tile_w=360, cols=3, pad=8):
     """Create a tiled gallery from individual images."""
     import math
@@ -441,7 +441,7 @@ def process_one_cycle(cycle_num, model, last_hash):
         
         # Save annotated image
         annotated_path = os.path.join(ANNOTATED_DIR, f"cycle{cycle_num}_{timestamp}_annotated.jpg")
-        detected_symbols = save_annotated_frame(img_bgr, boxes, names, annotated_path, CONF_THRESHOLD)
+        detected_symbols = save_annotated_frame(img_bgr, boxes, names, annotated_path, CONF_THRESHOLD,cycle_num)
         print(f"[PC] Saved annotated image: {annotated_path}")
         
         # Save individual clips for gallery
