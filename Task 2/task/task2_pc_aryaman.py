@@ -222,13 +222,15 @@ def save_annotated_frame(img_bgr, boxes, names, save_path, conf_threshold):
     cv2.imwrite(save_path, out_img)
     return detected_symbols
 
-def save_individual_clips(img_bgr, boxes, names, gallery_dir, conf_threshold):
+def save_individual_clips(img_bgr, boxes, names, gallery_dir, conf_threshold, cycle_num=0):
     """Save individual cropped images for ARROW detections only."""
-    saved_symbols = set()
-
+    # Removed saved_symbols set to allow duplicates
+    
     if boxes is None or len(boxes) == 0:
         return
 
+    arrow_count = 0  # Counter for multiple arrows in same cycle
+    
     for i in range(len(boxes)):
         xyxy = boxes.xyxy[i].cpu().numpy().tolist()
         x1, y1, x2, y2 = map(int, xyxy)
@@ -247,23 +249,25 @@ def save_individual_clips(img_bgr, boxes, names, gallery_dir, conf_threshold):
         if not is_arrow:
             continue  # Skip non-arrows
 
-        symbol_key = f"{obj_id}_{pretty}"
-        if symbol_key not in saved_symbols:
-            # Save the frame with bounding box (green for arrows)
-            single = img_bgr.copy()
-            cv2.rectangle(single, (x1, y1), (x2, y2), (0, 255, 0), 3)
+        # Make filename unique by including cycle number and arrow count
+        arrow_count += 1
+        symbol_key = f"cycle{cycle_num}_{obj_id}_{pretty}_arrow{arrow_count}"
+        
+        # Save the frame with bounding box (green for arrows)
+        single = img_bgr.copy()
+        cv2.rectangle(single, (x1, y1), (x2, y2), (0, 255, 0), 3)
 
-            label = f"ARROW: {pretty.upper()} (conf: {conf_i:.2f})"
-            (tw, th), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
-            y_top = max(0, y1 - th - 10)
-            cv2.rectangle(single, (x1, y_top), (x1 + tw + 8, y1), (0, 255, 0), -1)
-            cv2.putText(single, label, (x1 + 4, max(0, y1 - 7)),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+        label = f"ARROW: {pretty.upper()} (conf: {conf_i:.2f})"
+        (tw, th), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)
+        y_top = max(0, y1 - th - 10)
+        cv2.rectangle(single, (x1, y_top), (x1 + tw + 8, y1), (0, 255, 0), -1)
+        cv2.putText(single, label, (x1 + 4, max(0, y1 - 7)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
 
-            save_path = os.path.join(gallery_dir, f"{symbol_key}_ARROW.jpg")
-            cv2.imwrite(save_path, single)
-            saved_symbols.add(symbol_key)
-
+        save_path = os.path.join(gallery_dir, f"{symbol_key}.jpg")
+        cv2.imwrite(save_path, single)
+        print(f"[PC]      Saved gallery clip: {symbol_key}.jpg")
+        
 def make_tiled_gallery(gallery_dir, out_path, tile_w=360, cols=3, pad=8):
     """Create a tiled gallery from individual images."""
     import math
