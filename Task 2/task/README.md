@@ -6,10 +6,11 @@
 3. It will ask for password , which is mdpgroup30
 4. cd Desktop (all the files are saved on Desktop)
 5. ls to see all the file names 
-6. task2_aryaman.py file is what we are using for task 2 . It works on rpi side 
-7. task2_wa.py is without the android . So just press enter to start .
-8. For pc side , download task2_pc_aryaman.py and v1.pt (only these 2 files if you dont want to clone the whole repo) to the same folder.
-9. Download all the requirements from requirements.txt 
+6. task2_aryaman.py file is what we are using for task 2 . It works on rpi side . This one doesnt stop the timer on android with stm command. 
+7. task2_final.py has the timer stop. RUN THIS .
+8. task2_wa.py is without the android . So just press enter to start .
+9. For pc side , download task2_pc_aryaman.py and v1.pt (only these 2 files if you dont want to clone the whole repo) to the same folder.
+10. Download all the requirements from requirements.txt 
 
 ## To start running the task 2 code 
 1. Connect to rpi and go to Desktop 
