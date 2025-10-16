@@ -68,6 +68,7 @@ max_ready_count = 2  # We expect 2 ready signals
 bt_client_sock = None
 last_photo_hash = None  # Track hash to prevent duplicates
 photo_lock = threading.Lock()  # Thread-safe photo access
+task_complete = False  # Flag to signal clean shutdown
 
 # ----------------------------
 # Camera Functions
@@ -201,8 +202,8 @@ def bluetooth_listener():
 # STM Communication Loop
 # ----------------------------
 def stm_loop():
-    """Listen to STM for 'ready' signals and capture photos."""
-    global ready_count
+    """Listen to STM for 'ready' signals and 'COMPLETE' signal."""
+    global ready_count, task_complete
     
     print("[STM] Waiting for Android command before processing STM signals...")
     
@@ -259,23 +260,22 @@ def stm_loop():
                         else:
                             print("[CAM] ✗ Failed to capture photo")
 
+                elif norm_line == "complete":
+                    print(f"[STM] ✓ COMPLETE signal received from STM")
+                    print(f"[TASK] Week 9 task complete!")
 
-                    # After max_ready_count, send completion signal
-                    if ready_count >= max_ready_count:
-                        print(f"[STM] Completed {max_ready_count} ready cycles")
-                        print(f"[TASK] Week 9 task complete!")
+                    # Send WEEK9_TASK_DONE to Android
+                    if bt_client_sock:
+                        try:
+                            bt_client_sock.send(b"WEEK9_TASK_DONE\n")
+                            print("[BT] Sent WEEK9_TASK_DONE to Android")
+                        except Exception as e:
+                            print(f"[BT] Failed to send completion: {e}")
 
-                        # Send WEEK9_TASK_DONE to Android
-                        if bt_client_sock:
-                            try:
-                                bt_client_sock.send(b"WEEK9_TASK_DONE\n")
-                                print("[BT] Sent WEEK9_TASK_DONE to Android")
-                            except Exception as e:
-                                print(f"[BT] Failed to send completion: {e}")
-
-                        # Optionally reset for another run
-                        # ready_count = 0
-                        # android_command_received = False
+                    # Set flag and break out of loop
+                    task_complete = True
+                    print("[INIT] Task complete, initiating clean shutdown...")
+                    break
                         
         except serial.serialutil.SerialException as e:
             print(f"[ERROR] Serial read failed: {e}")
@@ -314,14 +314,44 @@ if __name__ == "__main__":
     print("[INIT] Workflow:")
     print("  1. Waiting for Android to send 'WEEK9_COMMAND' via Bluetooth")
     print("  2. Upon receipt, will send 'S' to STM")
-    print("  3. Will capture 2 photos when STM sends 'ready'")
+    print("  3. Will capture photos when STM sends 'ready'")
     print("  4. PC will fetch photos and send 'L' or 'R' responses")
+    print("  5. When STM sends 'COMPLETE', will notify Android and exit")
     print("=" * 60)
     
     # Run STM listener in main thread
     try:
         stm_loop()
+        
+        # Clean shutdown after task completion
+        print("\n[INIT] Cleaning up resources...")
+        time.sleep(0.5)  # Brief delay to ensure messages are sent
+        
+        # Close connections
+        cap.release()
+        print("[CAM] ✓ Camera released")
+        
+        ser.close()
+        print("[STM] ✓ Serial port closed")
+        
+        if bt_client_sock:
+            try:
+                bt_client_sock.close()
+            except:
+                pass
+        print("[BT] ✓ Bluetooth connection closed")
+        
+        print("=" * 60)
+        print("[INIT] ✓ Shutdown complete")
+        print("=" * 60)
+        
     except KeyboardInterrupt:
-        print("\n[INIT] Shutting down...")
+        print("\n[INIT] Interrupted by user, shutting down...")
         cap.release()
         ser.close()
+        if bt_client_sock:
+            try:
+                bt_client_sock.close()
+            except:
+                pass
+        print("[INIT] ✓ Shutdown complete")
