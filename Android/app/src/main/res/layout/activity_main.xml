@@ -70,6 +70,34 @@
         app:layout_constraintStart_toEndOf="@id/wk9button"
         app:layout_constraintTop_toTopOf="@id/wk8button" />
 
+    <!-- Save State Button -->
+    <Button
+        android:id="@+id/saveStateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/rounded_start_button_purple"
+        android:text="Save State"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintStart_toEndOf="@id/gridCompleteButton"
+        app:layout_constraintTop_toTopOf="@id/wk8button" />
+
+    <!-- Load State Button -->
+    <Button
+        android:id="@+id/loadStateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/rounded_start_button_purple"
+        android:text="Load State"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:paddingHorizontal="12dp"
+        app:layout_constraintStart_toEndOf="@id/saveStateButton"
+        app:layout_constraintTop_toTopOf="@id/wk8button" />
+
     <Button
         android:id="@+id/connect"
         android:layout_width="wrap_content"

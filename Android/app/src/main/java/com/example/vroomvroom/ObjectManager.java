@@ -265,6 +265,48 @@ public class ObjectManager {
             listener.onStatusMessage("Object " + objectType + " target ID updated to: " + targetId);
         }
     }
+    public void setObjectTargetIdSameSize(String objectType, int targetId) {
+        if (targetId < 1 || targetId > 40) {
+            if (listener != null) {
+                listener.onStatusMessage("Invalid target ID: " + targetId + ". Must be 1-40.");
+            }
+            return;
+        }
+
+        switch (objectType) {
+            case "OBJECT1":
+                object1TargetId = targetId;
+                break;
+            case "OBJECT2":
+                object2TargetId = targetId;
+                break;
+            case "OBJECT3":
+                object3TargetId = targetId;
+                break;
+            case "OBJECT4":
+                object4TargetId = targetId;
+                break;
+            case "OBJECT5":
+                object5TargetId = targetId;
+                break;
+            case "OBJECT6":
+                object6TargetId = targetId;
+                break;
+            case "OBJECT7":
+                object7TargetId = targetId;
+                break;
+            case "OBJECT8":
+                object8TargetId = targetId;
+                break;
+        }
+
+        updateTargetDisplaySameSize(objectType, targetId);
+
+        if (listener != null) {
+            listener.onTargetUpdated(objectType, targetId);
+            listener.onStatusMessage("Object " + objectType + " target ID updated to: " + targetId);
+        }
+    }
 
     public int getObjectTargetId(String objectType) {
         switch (objectType) {
@@ -404,6 +446,14 @@ public class ObjectManager {
         if (textView != null) {
             textView.setText(String.valueOf(targetId));
             textView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 14);
+        }
+    }
+
+    private void updateTargetDisplaySameSize(String objectType, int targetId) {
+        TextView textView = getTextView(objectType);
+        if (textView != null) {
+            textView.setText(String.valueOf(targetId));
+            textView.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 7);
         }
     }
 

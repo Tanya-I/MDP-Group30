@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements
     private TextView messageBox;
     private CustomGridView customGrid;
     private Button clearPathButton;
+    private Button saveStateButton;
+    private Button loadStateButton;
+    private ObjectStateManager stateManager;
 
     // Directional buttons
     private Button btnUp;
@@ -130,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements
 
         directionDialog = new DirectionSelectionDialog(this);
         directionDialog.setOnDirectionSelectedListener(this);
+
+        stateManager = new ObjectStateManager(this);
     }
 
     private void setupTimerRunnables() {
@@ -288,6 +293,8 @@ public class MainActivity extends AppCompatActivity implements
         wk9Button = findViewById(R.id.wk9button);
         wk9Timer = findViewById(R.id.wk9timer);
         gridCompleteButton = findViewById(R.id.gridCompleteButton);
+        saveStateButton = findViewById(R.id.saveStateButton);
+        loadStateButton = findViewById(R.id.loadStateButton);
 
         // EXPANDED TO 8 OBJECTS
         object1 = findViewById(R.id.object1);
@@ -356,6 +363,9 @@ public class MainActivity extends AppCompatActivity implements
             messageHandler.sendCustomCommand("GRID_COMPLETE");
             appendMessage("Grid Complete command sent");
         });
+
+        saveStateButton.setOnClickListener(v -> showSaveStateDialog());
+        loadStateButton.setOnClickListener(v -> showLoadStateDialog());
 
         setupDragAndDrop();
     }
@@ -916,6 +926,205 @@ public class MainActivity extends AppCompatActivity implements
             case "Object 8": return "OBJECT8";
             default: return null;
         }
+    }
+    // Helper Methods for Save State
+    private void showSaveStateDialog() {
+        String[] options = new String[3];
+        for (int i = 0; i < 3; i++) {
+            if (stateManager.hasState(i + 1)) {
+                options[i] = "State " + (i + 1) + " (Occupied)";
+            } else {
+                options[i] = "State " + (i + 1) + " (Empty)";
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Save to State");
+        builder.setItems(options, (dialog, which) -> {
+            int slot = which + 1;
+            if (stateManager.hasState(slot)) {
+                // Show overwrite confirmation
+                new AlertDialog.Builder(this)
+                        .setTitle("Overwrite State " + slot + "?")
+                        .setMessage("This will replace the existing saved state.")
+                        .setPositiveButton("Overwrite", (d, w) -> saveToSlot(slot))
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            } else {
+                saveToSlot(slot);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void saveToSlot(int slot) {
+        boolean success = stateManager.saveState(slot, objectManager);
+        if (success) {
+            appendMessage("State saved to Slot " + slot);
+            showToast("Saved to State " + slot);
+        } else {
+            appendMessage("Failed to save state");
+            showToast("Save failed");
+        }
+    }
+
+    private void showLoadStateDialog() {
+        // Check if any states exist
+        boolean hasAnyState = false;
+        for (int i = 1; i <= 3; i++) {
+            if (stateManager.hasState(i)) {
+                hasAnyState = true;
+                break;
+            }
+        }
+
+        if (!hasAnyState) {
+            showToast("No saved states available");
+            return;
+        }
+
+        String[] options = new String[3];
+        for (int i = 0; i < 3; i++) {
+            if (stateManager.hasState(i + 1)) {
+                options[i] = "Load State " + (i + 1);
+            } else {
+                options[i] = "State " + (i + 1) + " (Empty)";
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Load State");
+        builder.setItems(options, (dialog, which) -> {
+            int slot = which + 1;
+            if (stateManager.hasState(slot)) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Load State " + slot + "?")
+                        .setMessage("This will replace current object positions.")
+                        .setPositiveButton("Load", (d, w) -> loadFromSlot(slot))
+                        .setNegativeButton("Cancel", null)
+                        .show();
+            } else {
+                showToast("State " + slot + " is empty");
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void loadFromSlot(int slot) {
+        boolean success = stateManager.loadState(slot, objectManager);
+        if (success) {
+            // Update UI for all objects
+            for (int i = 1; i <= 8; i++) {
+                String objectType = "OBJECT" + i;
+                View objectView = getObjectViewByType(objectType);
+
+                if (objectView != null) {
+                    int x = objectManager.getObjectX(objectType);
+                    int y = objectManager.getObjectY(objectType);
+
+                    if (x >= 0 && y >= 0) {
+                        moveViewToGridCell(objectView, x, y);
+                    } else {
+                        // Return to original position
+                        returnObjectToOriginalPosition(objectView,
+                                getOriginalPositionByType(objectType),
+                                "Object " + i);
+                    }
+                    String direction;
+                    direction = objectManager.getObjectDirection(objectType);
+                    messageHandler.sendObjectPosition(objectType, x, y, direction);
+                }
+            }
+
+            updateObjectPlacement();
+            appendMessage("State loaded from Slot " + slot);
+            showToast("Loaded State " + slot);
+        } else {
+            appendMessage("Failed to load state");
+            showToast("Load failed");
+        }
+    }
+
+    // Helper method to get object view by type
+    private View getObjectViewByType(String objectType) {
+        switch (objectType) {
+            case "OBJECT1": return object1;
+            case "OBJECT2": return object2;
+            case "OBJECT3": return object3;
+            case "OBJECT4": return object4;
+            case "OBJECT5": return object5;
+            case "OBJECT6": return object6;
+            case "OBJECT7": return object7;
+            case "OBJECT8": return object8;
+            default: return null;
+        }
+    }
+
+    // Helper method to get original position by type
+    private float[] getOriginalPositionByType(String objectType) {
+        switch (objectType) {
+            case "OBJECT1": return object1OriginalPos;
+            case "OBJECT2": return object2OriginalPos;
+            case "OBJECT3": return object3OriginalPos;
+            case "OBJECT4": return object4OriginalPos;
+            case "OBJECT5": return object5OriginalPos;
+            case "OBJECT6": return object6OriginalPos;
+            case "OBJECT7": return object7OriginalPos;
+            case "OBJECT8": return object8OriginalPos;
+            default: return new float[]{0, 0};
+        }
+    }
+
+    // Add toast helper method if not already present
+    private void showToast(String message) {
+        android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show();
+    }
+
+    // Optional: Add a long-press handler for the buttons to clear states
+    private void setupStateLongPressListeners() {
+        saveStateButton.setOnLongClickListener(v -> {
+            showClearStatesDialog();
+            return true;
+        });
+
+        loadStateButton.setOnLongClickListener(v -> {
+            showClearStatesDialog();
+            return true;
+        });
+    }
+
+    private void showClearStatesDialog() {
+        String[] options = {"Clear State 1", "Clear State 2", "Clear State 3", "Clear All States"};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Clear States")
+                .setItems(options, (dialog, which) -> {
+                    if (which < 3) {
+                        int slot = which + 1;
+                        if (stateManager.hasState(slot)) {
+                            stateManager.clearState(slot);
+                            showToast("State " + slot + " cleared");
+                            appendMessage("Cleared State " + slot);
+                        } else {
+                            showToast("State " + slot + " is already empty");
+                        }
+                    } else {
+                        new AlertDialog.Builder(this)
+                                .setTitle("Clear All States?")
+                                .setMessage("This will delete all saved states.")
+                                .setPositiveButton("Clear All", (d, w) -> {
+                                    stateManager.clearAllStates();
+                                    showToast("All states cleared");
+                                    appendMessage("All states cleared");
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showBluetoothDiscovery() {
