@@ -15,6 +15,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity implements
         DragDropManager.OnDragEventListener,
@@ -32,12 +35,16 @@ public class MainActivity extends AppCompatActivity implements
     private Button connectButton;
     private TextView robotPositionValue;
     private TextView objectPlacementValue;
-    private TextView messageBox;
     private CustomGridView customGrid;
     private Button clearPathButton;
     private Button saveStateButton;
     private Button loadStateButton;
     private ObjectStateManager stateManager;
+
+    // ViewPager components for swipeable container
+    private ViewPager2 viewPager;
+    private TabLayout tabLayout;
+    private SwipeablePagerAdapter pagerAdapter;
 
     // Directional buttons
     private Button btnUp;
@@ -52,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements
     private TextView wk9Timer;
 
     private Button gridCompleteButton;
-    private EditText chatBox;
-    private Button sendButton;
     private TableLayout coordinateGrid;
 
     // Object views - EXPANDED TO 8
@@ -97,11 +102,35 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Hide system navigation bar (home button, etc.)
+        hideSystemUI();
+
         initializeManagers();
         initViews();
+        setupSwipeableContainer();
         setupListeners();
         setupInitialState();
         setupTimerRunnables();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
+
+    private void hideSystemUI() {
+        // Enable immersive mode to hide navigation bar
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
@@ -279,9 +308,6 @@ public class MainActivity extends AppCompatActivity implements
         connectButton = findViewById(R.id.connect);
         robotPositionValue = findViewById(R.id.robot_position_value);
         objectPlacementValue = findViewById(R.id.object_placement_value);
-        messageBox = findViewById(R.id.message_box_card);
-        chatBox = findViewById(R.id.chat_box_card);
-        sendButton = findViewById(R.id.send_button);
 
         btnUp = findViewById(R.id.btn_up);
         btnDown = findViewById(R.id.btn_down);
@@ -312,9 +338,33 @@ public class MainActivity extends AppCompatActivity implements
         coordinateGrid = findViewById(R.id.coordinate_grid);
         clearPathButton = findViewById(R.id.clear_path_button);
 
-        objectManager.initializeViews(findViewById(R.id.MainFragment));
+        // ViewPager components
+        viewPager = findViewById(R.id.swipeable_container);
+        tabLayout = findViewById(R.id.tab_layout);
 
-        messageBox.setMovementMethod(new ScrollingMovementMethod());
+        objectManager.initializeViews(findViewById(R.id.MainFragment));
+    }
+
+    private void setupSwipeableContainer() {
+        // Create and set adapter
+        pagerAdapter = new SwipeablePagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
+
+        // Handle send message callback from chat page
+        pagerAdapter.setOnSendMessageListener(message -> {
+            handleSendMessage(message);
+        });
+
+        // Connect TabLayout with ViewPager2
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            tab.setText(position == 0 ? "Status" : "Chat");
+        }).attach();
+    }
+
+    private void handleSendMessage(String message) {
+        if (!message.isEmpty()) {
+            messageHandler.sendChatMessage(message);
+        }
     }
 
     private void setupListeners() {
@@ -354,8 +404,6 @@ public class MainActivity extends AppCompatActivity implements
             messageHandler.sendRobotMovementCommand("RIGHT");
             if (robotManager.moveRobotInDirection("E")) {}
         });
-
-        sendButton.setOnClickListener(v -> sendChatMessage());
 
         wk8Button.setOnClickListener(v -> startWeek8Task());
         wk9Button.setOnClickListener(v -> startWeek9Task());
@@ -397,7 +445,51 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void clearRobotPath() {
+        // Clear the visual path on the grid
         customGrid.clearPath();
+
+        // Reset robot to off-grid position
+        robotManager.setRobotPosition(-1, -1);
+        returnObjectToOriginalPosition(robotCar, robotCarOriginalPos, "Robot Car");
+        customGrid.setRobotPosition(-1, -1);
+
+        // Reset all 8 objects to their original positions
+        objectManager.resetObjectPosition("OBJECT1");
+        returnObjectToOriginalPosition(object1, object1OriginalPos, "Object 1");
+
+        objectManager.resetObjectPosition("OBJECT2");
+        returnObjectToOriginalPosition(object2, object2OriginalPos, "Object 2");
+
+        objectManager.resetObjectPosition("OBJECT3");
+        returnObjectToOriginalPosition(object3, object3OriginalPos, "Object 3");
+
+        objectManager.resetObjectPosition("OBJECT4");
+        returnObjectToOriginalPosition(object4, object4OriginalPos, "Object 4");
+
+        objectManager.resetObjectPosition("OBJECT5");
+        returnObjectToOriginalPosition(object5, object5OriginalPos, "Object 5");
+
+        objectManager.resetObjectPosition("OBJECT6");
+        returnObjectToOriginalPosition(object6, object6OriginalPos, "Object 6");
+
+        objectManager.resetObjectPosition("OBJECT7");
+        returnObjectToOriginalPosition(object7, object7OriginalPos, "Object 7");
+
+        objectManager.resetObjectPosition("OBJECT8");
+        returnObjectToOriginalPosition(object8, object8OriginalPos, "Object 8");
+
+        // Update the UI
+        currentObject = "None";
+        updateObjectPlacement();
+        updateRobotPosition();
+
+        // Send reset message via Bluetooth
+        messageHandler.sendRobotPosition(-1, -1, robotManager.getRobotDirection());
+        for (int i = 1; i <= 8; i++) {
+            messageHandler.sendObjectPosition("OBJECT" + i, -1, -1, "N");
+        }
+
+        appendMessage("All objects and robot reset to original positions");
     }
 
     private void setupCustomGrid() {
@@ -815,14 +907,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void sendChatMessage() {
-        String message = chatBox.getText().toString().trim();
-        if (!message.isEmpty()) {
-            messageHandler.sendChatMessage(message);
-            chatBox.setText("");
-        }
-    }
-
     private void moveViewToGridCell(View view, int gridX, int gridY) {
         float[] cellPosition = customGrid.getCellPosition(gridX, gridY);
         if (cellPosition != null) {
@@ -927,6 +1011,7 @@ public class MainActivity extends AppCompatActivity implements
             default: return null;
         }
     }
+
     // Helper Methods for Save State
     private void showSaveStateDialog() {
         String[] options = new String[3];
@@ -943,7 +1028,6 @@ public class MainActivity extends AppCompatActivity implements
         builder.setItems(options, (dialog, which) -> {
             int slot = which + 1;
             if (stateManager.hasState(slot)) {
-                // Show overwrite confirmation
                 new AlertDialog.Builder(this)
                         .setTitle("Overwrite State " + slot + "?")
                         .setMessage("This will replace the existing saved state.")
@@ -970,7 +1054,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showLoadStateDialog() {
-        // Check if any states exist
         boolean hasAnyState = false;
         for (int i = 1; i <= 3; i++) {
             if (stateManager.hasState(i)) {
@@ -1015,7 +1098,6 @@ public class MainActivity extends AppCompatActivity implements
     private void loadFromSlot(int slot) {
         boolean success = stateManager.loadState(slot, objectManager);
         if (success) {
-            // Update UI for all objects
             for (int i = 1; i <= 8; i++) {
                 String objectType = "OBJECT" + i;
                 View objectView = getObjectViewByType(objectType);
@@ -1027,13 +1109,11 @@ public class MainActivity extends AppCompatActivity implements
                     if (x >= 0 && y >= 0) {
                         moveViewToGridCell(objectView, x, y);
                     } else {
-                        // Return to original position
                         returnObjectToOriginalPosition(objectView,
                                 getOriginalPositionByType(objectType),
                                 "Object " + i);
                     }
-                    String direction;
-                    direction = objectManager.getObjectDirection(objectType);
+                    String direction = objectManager.getObjectDirection(objectType);
                     messageHandler.sendObjectPosition(objectType, x, y, direction);
                 }
             }
@@ -1047,7 +1127,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    // Helper method to get object view by type
     private View getObjectViewByType(String objectType) {
         switch (objectType) {
             case "OBJECT1": return object1;
@@ -1062,7 +1141,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    // Helper method to get original position by type
     private float[] getOriginalPositionByType(String objectType) {
         switch (objectType) {
             case "OBJECT1": return object1OriginalPos;
@@ -1077,54 +1155,8 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    // Add toast helper method if not already present
     private void showToast(String message) {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show();
-    }
-
-    // Optional: Add a long-press handler for the buttons to clear states
-    private void setupStateLongPressListeners() {
-        saveStateButton.setOnLongClickListener(v -> {
-            showClearStatesDialog();
-            return true;
-        });
-
-        loadStateButton.setOnLongClickListener(v -> {
-            showClearStatesDialog();
-            return true;
-        });
-    }
-
-    private void showClearStatesDialog() {
-        String[] options = {"Clear State 1", "Clear State 2", "Clear State 3", "Clear All States"};
-
-        new AlertDialog.Builder(this)
-                .setTitle("Clear States")
-                .setItems(options, (dialog, which) -> {
-                    if (which < 3) {
-                        int slot = which + 1;
-                        if (stateManager.hasState(slot)) {
-                            stateManager.clearState(slot);
-                            showToast("State " + slot + " cleared");
-                            appendMessage("Cleared State " + slot);
-                        } else {
-                            showToast("State " + slot + " is already empty");
-                        }
-                    } else {
-                        new AlertDialog.Builder(this)
-                                .setTitle("Clear All States?")
-                                .setMessage("This will delete all saved states.")
-                                .setPositiveButton("Clear All", (d, w) -> {
-                                    stateManager.clearAllStates();
-                                    showToast("All states cleared");
-                                    appendMessage("All states cleared");
-                                })
-                                .setNegativeButton("Cancel", null)
-                                .show();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
     }
 
     private void showBluetoothDiscovery() {
@@ -1164,17 +1196,9 @@ public class MainActivity extends AppCompatActivity implements
         coordPreview.postDelayed(() -> coordPreview.setVisibility(View.GONE), 2000);
     }
 
+    // Method to append message to status TextView through the adapter
     private void appendMessage(String msg) {
-        String oldText = messageBox.getText().toString();
-        String newText = oldText.isEmpty() ? msg : oldText + "\n" + msg;
-        messageBox.setText(newText);
-
-        messageBox.post(() -> {
-            int scrollAmount = messageBox.getLineCount() * messageBox.getLineHeight() - messageBox.getHeight();
-            if (scrollAmount > 0) {
-                messageBox.scrollTo(0, scrollAmount);
-            }
-        });
+        pagerAdapter.appendStatusMessage(msg);
     }
 
     public void handleDeviceSelected(BluetoothDevice device) {

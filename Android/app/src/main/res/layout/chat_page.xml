@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#FFFFFF"
+    android:elevation="3dp">
+
+    <!-- Chat EditText -->
+    <EditText
+        android:id="@+id/chat_input"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:gravity="top|start"
+        android:inputType="textMultiLine|textCapSentences"
+        android:padding="8dp"
+        android:scrollbars="vertical"
+        android:text=""
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:hint="Type your message here..."
+        android:textColorHint="#888888" />
+
+    <!-- Send Button -->
+    <Button
+        android:id="@+id/chat_send_button"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="4dp"
+        android:background="@drawable/rounded_start_button_green"
+        android:text="Send"
+        android:textColor="#FFFFFF"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="12dp"
+        android:elevation="15dp" />
+
+</LinearLayout>
