@@ -50,8 +50,10 @@
             android:background="@drawable/rounded_start_button_purple"
             android:text="Start Week 8"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
         <Button
             android:id="@+id/wk9button"
@@ -62,8 +64,10 @@
             android:background="@drawable/rounded_start_button_purple"
             android:text="Start Week 9"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
         <Button
             android:id="@+id/gridCompleteButton"
@@ -74,8 +78,10 @@
             android:background="@drawable/rounded_start_button_purple"
             android:text="Grid Complete"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
         <Button
             android:id="@+id/connect"
@@ -85,8 +91,10 @@
             android:background="@drawable/rounded_start_button_green"
             android:text="Connect"
             android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
     </LinearLayout>
 
@@ -307,8 +315,10 @@
             android:background="@drawable/rounded_start_button_purple"
             android:text="Reset All"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
         <Button
             android:id="@+id/saveStateButton"
@@ -319,8 +329,10 @@
             android:background="@drawable/rounded_start_button_purple"
             android:text="Save State"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
         <Button
             android:id="@+id/loadStateButton"
@@ -330,8 +342,10 @@
             android:background="@drawable/rounded_start_button_purple"
             android:text="Load State"
             android:textColor="#FFFFFF"
-            android:textSize="10sp"
-            android:paddingHorizontal="4dp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingHorizontal="2dp" />
 
     </LinearLayout>
 
@@ -354,10 +368,11 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:elevation="3dp"
         app:layout_constraintStart_toStartOf="@id/obstacles_card"
-        app:layout_constraintTop_toTopOf="@id/obstacles_card">
+        app:layout_constraintTop_toTopOf="@id/obstacles_card"
+        app:layout_constraintBottom_toBottomOf="@id/obstacles_card"
+        app:layout_constraintVertical_bias="0.3">
 
         <ImageView
             android:id="@+id/object1_image"
@@ -514,7 +529,9 @@
         android:layout_marginTop="6dp"
         android:elevation="3dp"
         app:layout_constraintStart_toStartOf="@id/object1"
-        app:layout_constraintTop_toBottomOf="@id/object1">
+        app:layout_constraintTop_toBottomOf="@id/object1"
+        app:layout_constraintBottom_toBottomOf="@id/obstacles_card"
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/object5_image"
@@ -681,7 +698,7 @@
         android:id="@+id/dpad_container"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="180dp"
         app:layout_constraintStart_toEndOf="@id/obstacles_card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/obstacles_card"
@@ -694,7 +711,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="5dp"
-            android:background="#2196F3"
+            android:background="#1976D2"
             android:text="↑"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -707,7 +724,7 @@
             android:layout_height="30dp"
             android:layout_gravity="left|center_vertical"
             android:layout_marginStart="5dp"
-            android:background="#2196F3"
+            android:background="#1976D2"
             android:text="←"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -728,7 +745,7 @@
             android:layout_height="30dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginEnd="5dp"
-            android:background="#2196F3"
+            android:background="#1976D2"
             android:text="→"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
@@ -741,7 +758,7 @@
             android:layout_height="30dp"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="5dp"
-            android:background="#2196F3"
+            android:background="#1976D2"
             android:text="↓"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
