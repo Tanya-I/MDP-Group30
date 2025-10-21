@@ -99,10 +99,18 @@ public class DragDropManager {
                                     view.setY(newY);
                                 }
                             }
+
+                            // NEW: Update hover highlighting during drag
+                            updateHoverHighlight(event.getRawX(), event.getRawY());
                         }
                         return true;
 
                     case MotionEvent.ACTION_UP:
+                        // NEW: Clear hover highlight when drag ends
+                        if (targetGrid != null) {
+                            targetGrid.clearHover();
+                        }
+
                         long touchDuration = System.currentTimeMillis() - touchDownTime;
 
                         if (isDragging) {
@@ -178,11 +186,35 @@ public class DragDropManager {
                         isClick = false;
                         return true;
 
+                    case MotionEvent.ACTION_CANCEL:
+                        // NEW: Clear hover highlight if drag is cancelled
+                        if (targetGrid != null) {
+                            targetGrid.clearHover();
+                        }
+                        isDragging = false;
+                        isClick = false;
+                        return true;
+
                     default:
                         return false;
                 }
             }
         };
+    }
+
+    // NEW: Method to update hover highlighting during drag
+    private void updateHoverHighlight(float screenX, float screenY) {
+        if (targetGrid == null) return;
+
+        int[] gridCoords = getExactGridCoordinates(screenX, screenY);
+
+        if (gridCoords != null) {
+            // Over a valid grid cell - show hover highlight
+            targetGrid.setHoverPosition(gridCoords[0], gridCoords[1]);
+        } else {
+            // Outside grid - clear hover highlight
+            targetGrid.clearHover();
+        }
     }
 
     private int[] getExactGridCoordinates(float screenX, float screenY) {
@@ -269,4 +301,3 @@ public class DragDropManager {
         }
     }
 }
-

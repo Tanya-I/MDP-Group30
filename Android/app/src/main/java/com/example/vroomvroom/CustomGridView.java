@@ -14,6 +14,7 @@ public class CustomGridView extends View {
     private Paint gridPaint;
     private Paint robotPaint;
     private Paint pathPaint;
+    private Paint hoverPaint; // NEW: Paint for hover highlighting
     private int gridSize = 20;
     private float cellWidth;
     private float cellHeight;
@@ -22,6 +23,11 @@ public class CustomGridView extends View {
 
     private int robotX = -1;
     private int robotY = -1;
+
+    // NEW: Hover tracking
+    private int hoverX = -1;
+    private int hoverY = -1;
+    private boolean isHovering = false;
 
     // Path tracking
     private Set<String> visitedCells = new HashSet<>();
@@ -55,6 +61,12 @@ public class CustomGridView extends View {
         pathPaint.setColor(0x80ADD8E6);
         pathPaint.setStyle(Paint.Style.FILL);
         pathPaint.setAntiAlias(true);
+
+        // NEW: Initialize hover paint with semi-transparent yellow
+        hoverPaint = new Paint();
+        hoverPaint.setColor(0x80FFFF00); // 50% opacity yellow
+        hoverPaint.setStyle(Paint.Style.FILL);
+        hoverPaint.setAntiAlias(true);
     }
 
     public void setTableLayoutReference(View tableLayout) {
@@ -113,8 +125,13 @@ public class CustomGridView extends View {
 
         if (!isInitialized || cellWidth <= 0 || cellHeight <= 0) return;
 
-        // Draw the visited path cells first (so they appear behind grid lines)
+        // Draw the visited path cells first (so they appear behind everything)
         drawVisitedCells(canvas);
+
+        // NEW: Draw the hover highlight (row and column) before grid lines
+        if (isHovering && hoverX >= 0 && hoverY >= 0) {
+            drawHoverHighlight(canvas);
+        }
 
         // Draw the grid lines over the data area only (20x20 grid, excluding labels)
         float gridWidth = gridSize * cellWidth;
@@ -145,6 +162,58 @@ public class CustomGridView extends View {
                         cellPos[0] + cellPos[2], cellPos[1] + cellPos[3],
                         pathPaint);
             }
+        }
+    }
+
+    // NEW: Draw hover highlight for entire row and column
+    private void drawHoverHighlight(Canvas canvas) {
+        if (hoverX < 0 || hoverX >= gridSize || hoverY < 0 || hoverY >= gridSize) {
+            return;
+        }
+
+        // Convert logical coordinates to visual coordinates
+        int visualX = hoverX;
+        int visualY = gridSize - 1 - hoverY; // Flip Y axis
+
+        // Draw the entire row (horizontal strip)
+        float rowY = gridStartY + (visualY * cellHeight);
+        canvas.drawRect(gridStartX, rowY,
+                gridStartX + (gridSize * cellWidth), rowY + cellHeight,
+                hoverPaint);
+
+        // Draw the entire column (vertical strip)
+        float colX = gridStartX + (visualX * cellWidth);
+        canvas.drawRect(colX, gridStartY,
+                colX + cellWidth, gridStartY + (gridSize * cellHeight),
+                hoverPaint);
+    }
+
+    // NEW: Set hover position (called during drag)
+    public void setHoverPosition(int x, int y) {
+        // Only update and redraw if the position actually changed
+        if (hoverX != x || hoverY != y || !isHovering) {
+            hoverX = x;
+            hoverY = y;
+            isHovering = true;
+            invalidate();
+        }
+    }
+
+    // NEW: Clear hover highlighting
+    public void clearHover() {
+        if (isHovering) {
+            isHovering = false;
+            hoverX = -1;
+            hoverY = -1;
+            invalidate();
+        }
+    }
+
+    // NEW: Set hover color (optional, allows customization)
+    public void setHoverColor(int color) {
+        hoverPaint.setColor(color);
+        if (isHovering) {
+            invalidate();
         }
     }
 
