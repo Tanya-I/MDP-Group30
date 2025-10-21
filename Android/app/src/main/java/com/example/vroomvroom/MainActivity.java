@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements
             wk8Button.setEnabled(true);
             wk8Button.setText("Stop");
             timerHandler.post(week8TimerRunnable);
-            appendMessage("Week 8 task started - Timer running");
+//            appendMessage("Week 8 task started - Timer running");
         }
     }
 
@@ -217,8 +217,8 @@ public class MainActivity extends AppCompatActivity implements
             long minutes = (week8PausedTime / 1000) / 60;
             long seconds = (week8PausedTime / 1000) % 60;
             long centiseconds = (week8PausedTime % 1000) / 10;
-            appendMessage(String.format("Week 8 task completed in %02d:%02d.%02d",
-                    minutes, seconds, centiseconds));
+//            appendMessage(String.format("Week 8 task completed in %02d:%02d.%02d",
+//                    minutes, seconds, centiseconds));
         }
     }
 
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements
         wk8Button.setEnabled(true);
         wk8Button.setText("Start Week 8");
         wk8Timer.setText("00:00.00");
-        appendMessage("Week 8 timer reset");
+//        appendMessage("Week 8 timer reset");
     }
 
     private void startWeek9Timer() {
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements
             wk9Button.setEnabled(true);
             wk9Button.setText("Stop");
             timerHandler.post(week9TimerRunnable);
-            appendMessage("Week 9 task started - Timer running");
+//            appendMessage("Week 9 task started - Timer running");
         }
     }
 
@@ -251,8 +251,8 @@ public class MainActivity extends AppCompatActivity implements
             long minutes = (week9PausedTime / 1000) / 60;
             long seconds = (week9PausedTime / 1000) % 60;
             long centiseconds = (week9PausedTime % 1000) / 10;
-            appendMessage(String.format("Week 9 task completed in %02d:%02d.%02d",
-                    minutes, seconds, centiseconds));
+//            appendMessage(String.format("Week 9 task completed in %02d:%02d.%02d",
+//                    minutes, seconds, centiseconds));
         }
     }
 
@@ -263,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements
         wk9Button.setEnabled(true);
         wk9Button.setText("Week 9");
         wk9Timer.setText("00:00.00");
-        appendMessage("Week 9 timer reset");
+//        appendMessage("Week 9 timer reset");
     }
 
     private void showWeek8StopConfirmation() {
@@ -409,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements
         wk9Button.setOnClickListener(v -> startWeek9Task());
         gridCompleteButton.setOnClickListener(v -> {
             messageHandler.sendCustomCommand("GRID_COMPLETE");
-            appendMessage("Grid Complete command sent");
+//            appendMessage("Grid Complete command sent");
         });
 
         saveStateButton.setOnClickListener(v -> showSaveStateDialog());
@@ -489,7 +489,7 @@ public class MainActivity extends AppCompatActivity implements
             messageHandler.sendObjectPosition("OBJECT" + i, -1, -1, "N");
         }
 
-        appendMessage("All objects and robot reset to original positions");
+//        appendMessage("All objects and robot reset to original positions");
     }
 
     private void setupCustomGrid() {
@@ -646,7 +646,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onObjectPositionUpdate(String objectType, int x, int y, String direction) {
         objectManager.setObjectPosition(objectType, x, y);
         objectManager.setObjectDirection(objectType, direction);
-        appendMessage("Received position update: " + objectType + " at (" + x + "," + y + "," + direction + ")");
+//        appendMessage("Received position update: " + objectType + " at (" + x + "," + y + "," + direction + ")");
     }
 
     @Override
@@ -700,7 +700,7 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         rotateRobotCarToDirection(direction);
-        appendMessage("Received robot update from Bluetooth: (" + x + "," + y + "," + direction + ")");
+//        appendMessage("Received robot update from Bluetooth: (" + x + "," + y + "," + direction + ")");
     }
 
     // DIRECTION DIALOG CALLBACKS
@@ -1045,10 +1045,10 @@ public class MainActivity extends AppCompatActivity implements
     private void saveToSlot(int slot) {
         boolean success = stateManager.saveState(slot, objectManager);
         if (success) {
-            appendMessage("State saved to Slot " + slot);
+//            appendMessage("State saved to Slot " + slot);
             showToast("Saved to State " + slot);
         } else {
-            appendMessage("Failed to save state");
+//            appendMessage("Failed to save state");
             showToast("Save failed");
         }
     }
@@ -1119,10 +1119,10 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             updateObjectPlacement();
-            appendMessage("State loaded from Slot " + slot);
+//            appendMessage("State loaded from Slot " + slot);
             showToast("Loaded State " + slot);
         } else {
-            appendMessage("Failed to load state");
+//            appendMessage("Failed to load state");
             showToast("Load failed");
         }
     }
