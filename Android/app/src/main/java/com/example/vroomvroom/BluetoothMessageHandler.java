@@ -90,33 +90,27 @@ public class BluetoothMessageHandler {
             listener.onStatusMessage("Received: " + trimmedMessage);
         }
 
-        // Check for task completion messages first
         if (parseTaskCompletionMessage(trimmedMessage)) {
             return;
         }
 
-        // Try to parse as TARGET message first
         if (parseTargetMessage(trimmedMessage)) {
             return;
         }
 
-        // Try to parse as ROBOT position message
         if (parseRobotPositionMessage(trimmedMessage)) {
             return;
         }
 
-        // Try to parse as OBJECT position message
         if (parseObjectPositionMessage(trimmedMessage)) {
             return;
         }
 
-        // If not a recognized command format, treat as general message
         if (listener != null) {
             listener.onStatusMessage("General message received: " + trimmedMessage);
         }
     }
 
-    // New method to parse task completion messages
     private boolean parseTaskCompletionMessage(String message) {
         String upperMessage = message.toUpperCase();
 
@@ -154,7 +148,6 @@ public class BluetoothMessageHandler {
             int obstacleNumber = Integer.parseInt(parts[1].trim());
             int targetId = Integer.parseInt(parts[2].trim());
 
-            // Validate obstacle number (1-8)
             if (obstacleNumber < 1 || obstacleNumber > 8) {
                 if (listener != null) {
                     listener.onStatusMessage("Invalid obstacle number: " + obstacleNumber + " (must be 1-8)");
@@ -162,7 +155,6 @@ public class BluetoothMessageHandler {
                 return false;
             }
 
-            // Validate target ID (1-40)
             if (targetId < 1 || targetId > 40) {
                 if (listener != null) {
                     listener.onStatusMessage("Invalid target ID: " + targetId + " (must be 1-40)");
@@ -170,7 +162,6 @@ public class BluetoothMessageHandler {
                 return false;
             }
 
-            // Convert obstacle number to object type
             String objectType = "OBJECT" + obstacleNumber;
 
             if (listener != null) {
@@ -191,7 +182,6 @@ public class BluetoothMessageHandler {
     private boolean parseRobotPositionMessage(String message) {
         String[] parts = message.split(",");
 
-        // Handle both "ROBOT, UNKNOWN" and "ROBOT, X, Y, DIRECTION" formats
         if (parts.length < 2) {
             return false;
         }
@@ -201,7 +191,6 @@ public class BluetoothMessageHandler {
             return false;
         }
 
-        // Handle "ROBOT, UNKNOWN" case
         if (parts.length == 2 && parts[1].trim().toUpperCase().equals("UNKNOWN")) {
             if (listener != null) {
                 listener.onStatusMessage("Received robot position: UNKNOWN");

@@ -23,7 +23,7 @@ import java.util.UUID;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 
-public class BluetoothConnectionService {
+public class  BluetoothConnectionService {
     private static final String TAG = "BluetoothConnectionSrv";
     private static final String appName = "VroomVroom";
     private static final UUID MY_UUID_INSECURE = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -45,11 +45,6 @@ public class BluetoothConnectionService {
         start();
     }
 
-    /**
-     * This thread runs while listening for incoming connections. It behaves
-     * like a server-side client. It runs until a connection is accepted
-     * (or until cancelled).
-     */
     private class AcceptThread extends Thread {
         private final BluetoothServerSocket mmServerSocket;
 
@@ -99,11 +94,6 @@ public class BluetoothConnectionService {
         }
     }
 
-    /**
-     * This thread runs while attempting to make an outgoing connection
-     * with a device. It runs straight through; the connection either
-     * succeeds or fails.
-     */
     private class ConnectThread extends Thread {
         private BluetoothSocket mmSocket;
 
@@ -181,10 +171,7 @@ public class BluetoothConnectionService {
         }
     }
 
-    /**
-     * AcceptThread starts and sits waiting for a connection.
-     * Then ConnectThread starts and attempts to make a connection with the other devices AcceptThread.
-     **/
+
     public void startClientThread(BluetoothDevice device, UUID uuid) {
         Log.d(TAG, "startClient: Started.");
 
@@ -192,10 +179,6 @@ public class BluetoothConnectionService {
         mConnectThread.start();
     }
 
-    /**
-     * Finally the ConnectedThread which is responsible for maintaining the BTConnection, Sending data, and
-     * receiving incoming data through input/output streams respectively.
-     **/
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -231,7 +214,6 @@ public class BluetoothConnectionService {
                     String incomingMessage = new String(buffer, 0, bytes);
                     Log.d(TAG, "InputStream: " + incomingMessage);
 
-                    // Broadcast received message if needed
                     Intent incomingMessageIntent = new Intent("incomingMessage");
                     incomingMessageIntent.putExtra("receivedMessage", incomingMessage);
                     LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingMessageIntent);
@@ -268,19 +250,12 @@ public class BluetoothConnectionService {
     private void connected(BluetoothSocket mmSocket, BluetoothDevice mmDevice) {
         Log.d(TAG, "connected: Starting.");
 
-        // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(mmSocket);
         mConnectedThread.start();
 
-        // Broadcast successful connection
         broadcastUpdate("connected");
     }
 
-    /**
-     * Write to the ConnectedThread in an unsynchronized manner
-     *
-     * @param out The bytes to write
-     */
     public void write(byte[] out) {
         ConnectedThread r;
 
@@ -288,9 +263,6 @@ public class BluetoothConnectionService {
         mConnectedThread.write(out);
     }
 
-    /**
-     * Broadcast connection status updates
-     */
     private void broadcastUpdate(String status) {
         Intent intent = new Intent("ConnectionStatus");
         intent.putExtra("Status", status);
@@ -298,9 +270,6 @@ public class BluetoothConnectionService {
         LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
-    /**
-     * Disconnect the current connection
-     */
     public void disconnect() {
         Log.d(TAG, "disconnect: Disconnecting.");
 
@@ -318,9 +287,6 @@ public class BluetoothConnectionService {
         broadcastUpdate("disconnected");
     }
 
-    /**
-     * Start the AcceptThread to listen for connections
-     */
     public void startAcceptThread() {
         if (mInsecureAcceptThread != null) {
             mInsecureAcceptThread.cancel();
@@ -330,16 +296,9 @@ public class BluetoothConnectionService {
         mInsecureAcceptThread.start();
     }
 
-    /**
-     * Check if currently connected
-     */
     public boolean isConnected() {
         return BluetoothConnectionStatus;
     }
-
-    /**
-     * Get the connected device
-     */
     public BluetoothDevice getConnectedDevice() {
         return mmDevice;
     }

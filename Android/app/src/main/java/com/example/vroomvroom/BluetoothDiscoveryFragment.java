@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Bluetooth Discovery Fragment that matches the provided XML layout
- */
 public class BluetoothDiscoveryFragment extends DialogFragment {
     private static final String TAG = "BluetoothDiscovery";
 

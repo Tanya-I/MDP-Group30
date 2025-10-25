@@ -106,10 +106,8 @@ public class BluetoothManager {
             listener.onConnectionAttemptStarted(deviceName);
         }
 
-        // Cancel any pending reconnection attempts
         cancelReconnectionAttempts();
 
-        // Initialize fresh Bluetooth service
         createFreshBluetoothService();
 
         // Start actual Bluetooth connection
@@ -132,7 +130,6 @@ public class BluetoothManager {
             listener.onStatusMessage("Manually disconnecting from " + deviceNameForMessage + "...");
         }
 
-        // Cancel auto-reconnection when user manually disconnects
         cancelReconnectionAttempts();
 
         if (bluetoothService != null) {
@@ -248,11 +245,8 @@ public class BluetoothManager {
                 isConnected = true;
                 isReconnecting = false;
 
-                // Store successful connection
                 lastConnectedDevice = device;
-                reconnectAttempts = 0; // Reset on successful connection
-
-                // Update device name if we have a better one from the device
+                reconnectAttempts = 0;
                 if (device != null) {
                     String deviceName = getDeviceName(device);
                     if (!deviceName.equals("Unknown Device")) {
@@ -260,7 +254,6 @@ public class BluetoothManager {
                     }
                 }
 
-                // Store the last connected device name
                 lastConnectedDeviceName = connectedDeviceName;
 
                 if (listener != null) {
@@ -272,7 +265,6 @@ public class BluetoothManager {
             case "disconnected":
             case "failed":
                 isConnected = false;
-                // Store the current device name before clearing it
                 String deviceNameForMessage = !connectedDeviceName.isEmpty() ? connectedDeviceName : lastConnectedDeviceName;
                 connectedDeviceName = "";
 
@@ -328,7 +320,6 @@ public class BluetoothManager {
                     listener.onStatusMessage("Attempting reconnection to " + deviceName);
                 }
 
-                // Create fresh service and attempt connection
                 createFreshBluetoothService();
 
                 try {
@@ -340,7 +331,6 @@ public class BluetoothManager {
                         listener.onStatusMessage("Reconnection attempt failed: " + e.getMessage());
                     }
 
-                    // Schedule next attempt if within limits
                     if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                         scheduleReconnection();
                     }

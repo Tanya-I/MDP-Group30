@@ -78,7 +78,6 @@ public class SwipeablePagerAdapter extends RecyclerView.Adapter<SwipeablePagerAd
         }
     }
 
-    // Method to append message to status text
     public void appendStatusMessage(String msg) {
         if (statusTextView != null) {
             String oldText = statusTextView.getText().toString();

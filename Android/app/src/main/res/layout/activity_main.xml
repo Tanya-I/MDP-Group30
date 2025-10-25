@@ -98,30 +98,46 @@
 
     </LinearLayout>
 
-    <!-- Timer Section -->
+    <!-- Timer Section - Centered under Week 8 and Week 9 buttons -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_wk8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.125" />
+
+    <!-- Guideline at 37.5% (middle of second button) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_wk9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.375" />
+
+    <!-- Timer Section - Centered under Week 8 and Week 9 buttons -->
     <TextView
         android:id="@+id/wk8timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
-        android:layout_marginStart="12dp"
         android:gravity="center"
         android:text="00:00:00"
         android:textColor="#333333"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline_wk8"
+        app:layout_constraintEnd_toEndOf="@id/guideline_wk8"
         app:layout_constraintTop_toBottomOf="@id/button_row" />
 
     <TextView
         android:id="@+id/wk9timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:gravity="center"
         android:text="00:00:00"
         android:textColor="#333333"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@id/wk8timer"
+        app:layout_constraintStart_toStartOf="@id/guideline_wk9"
+        app:layout_constraintEnd_toEndOf="@id/guideline_wk9"
         app:layout_constraintTop_toTopOf="@id/wk8timer" />
 
     <!-- Robot Position Card -->

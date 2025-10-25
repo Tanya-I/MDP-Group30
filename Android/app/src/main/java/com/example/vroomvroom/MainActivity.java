@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String TAG = "MainActivity";
 
-    // UI Components
     private TextView connectedDevice;
     private View connectionIndicator;
     private Button connectButton;
@@ -41,18 +40,15 @@ public class MainActivity extends AppCompatActivity implements
     private Button loadStateButton;
     private ObjectStateManager stateManager;
 
-    // ViewPager components for swipeable container
     private ViewPager2 viewPager;
     private TabLayout tabLayout;
     private SwipeablePagerAdapter pagerAdapter;
 
-    // Directional buttons
     private Button btnUp;
     private Button btnDown;
     private Button btnLeft;
     private Button btnRight;
 
-    // UI elements
     private Button wk8Button;
     private TextView wk8Timer;
     private Button wk9Button;
@@ -61,12 +57,10 @@ public class MainActivity extends AppCompatActivity implements
     private Button gridCompleteButton;
     private TableLayout coordinateGrid;
 
-    // Object views - EXPANDED TO 8
     private View object1, object2, object3, object4, object5, object6, object7, object8;
     private View robotCar;
     private TextView coordPreview;
 
-    // Manager instances
     private DragDropManager dragDropManager;
     private BluetoothManager bluetoothManager;
     private ObjectManager objectManager;
@@ -74,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements
     private BluetoothMessageHandler messageHandler;
     private DirectionSelectionDialog directionDialog;
 
-    // Timer functionality
     private Handler timerHandler = new Handler();
     private Runnable week8TimerRunnable;
     private Runnable week9TimerRunnable;
@@ -85,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements
     private long week8PausedTime = 0;
     private long week9PausedTime = 0;
 
-    // State
     private String currentObject = "None";
     private float[] object1OriginalPos = new float[2];
     private float[] object2OriginalPos = new float[2];
@@ -102,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Hide system navigation bar (home button, etc.)
         hideSystemUI();
 
         initializeManagers();
@@ -122,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void hideSystemUI() {
-        // Enable immersive mode to hide navigation bar
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -322,7 +312,6 @@ public class MainActivity extends AppCompatActivity implements
         saveStateButton = findViewById(R.id.saveStateButton);
         loadStateButton = findViewById(R.id.loadStateButton);
 
-        // EXPANDED TO 8 OBJECTS
         object1 = findViewById(R.id.object1);
         object2 = findViewById(R.id.object2);
         object3 = findViewById(R.id.object3);
@@ -346,11 +335,9 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setupSwipeableContainer() {
-        // Create and set adapter
         pagerAdapter = new SwipeablePagerAdapter(this);
         viewPager.setAdapter(pagerAdapter);
 
-        // Handle send message callback from chat page
         pagerAdapter.setOnSendMessageListener(message -> {
             handleSendMessage(message);
         });
@@ -445,15 +432,13 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void clearRobotPath() {
-        // Clear the visual path on the grid
+
         customGrid.clearPath();
 
-        // Reset robot to off-grid position
         robotManager.setRobotPosition(-1, -1);
         returnObjectToOriginalPosition(robotCar, robotCarOriginalPos, "Robot Car");
         customGrid.setRobotPosition(-1, -1);
 
-        // Reset all 8 objects to their original positions
         objectManager.resetObjectPosition("OBJECT1");
         returnObjectToOriginalPosition(object1, object1OriginalPos, "Object 1");
 
@@ -478,12 +463,10 @@ public class MainActivity extends AppCompatActivity implements
         objectManager.resetObjectPosition("OBJECT8");
         returnObjectToOriginalPosition(object8, object8OriginalPos, "Object 8");
 
-        // Update the UI
         currentObject = "None";
         updateObjectPlacement();
         updateRobotPosition();
 
-        // Send reset message via Bluetooth
         messageHandler.sendRobotPosition(-1, -1, robotManager.getRobotDirection());
         for (int i = 1; i <= 8; i++) {
             messageHandler.sendObjectPosition("OBJECT" + i, -1, -1, "N");

@@ -32,7 +32,6 @@ public class DirectionSelectionDialog {
         LayoutInflater inflater = LayoutInflater.from(context);
         View dialogView = inflater.inflate(R.layout.dialog_direction_selection, null);
 
-        // Find views
         TextView titleText = dialogView.findViewById(R.id.dialog_title);
         TextView itemText = dialogView.findViewById(R.id.dialog_item_name);
         Button northButton = dialogView.findViewById(R.id.button_north);
@@ -41,19 +40,19 @@ public class DirectionSelectionDialog {
         Button westButton = dialogView.findViewById(R.id.button_west);
         Button cancelButton = dialogView.findViewById(R.id.button_cancel);
 
-        // Set dialog content
+
         String title = itemType.equals("ROBOT") ? "Set Robot Direction" : "Set Object Direction";
         titleText.setText(title);
         itemText.setText("Item: " + itemName);
 
-        // Create dialog
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(dialogView);
         builder.setCancelable(true);
 
         dialog = builder.create();
 
-        // Set up button listeners
+
         View.OnClickListener directionClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

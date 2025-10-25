@@ -18,7 +18,6 @@ public class ObjectStateManager {
         this.prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
-    // Save current state to a slot (1, 2, or 3)
     public boolean saveState(int slot, ObjectManager objectManager) {
         if (slot < 1 || slot > MAX_STATES) {
             return false;
@@ -26,7 +25,6 @@ public class ObjectStateManager {
 
         SharedPreferences.Editor editor = prefs.edit();
 
-        // Save all 8 objects
         for (int i = 1; i <= NUM_OBJECTS; i++) {
             String objectType = "OBJECT" + i;
             String prefix = "state_" + slot + "_obj_" + i + "_";
@@ -38,13 +36,11 @@ public class ObjectStateManager {
             editor.putBoolean(prefix + "placed", objectManager.isObjectPlaced(objectType));
         }
 
-        // Mark this slot as having data
         editor.putBoolean("state_" + slot + "_exists", true);
 
         return editor.commit();
     }
 
-    // Load state from a slot
     public boolean loadState(int slot, ObjectManager objectManager) {
         if (slot < 1 || slot > MAX_STATES) {
             return false;
@@ -73,7 +69,6 @@ public class ObjectStateManager {
         return true;
     }
 
-    // Check if a slot has a saved state
     public boolean hasState(int slot) {
         if (slot < 1 || slot > MAX_STATES) {
             return false;
@@ -81,7 +76,6 @@ public class ObjectStateManager {
         return prefs.getBoolean("state_" + slot + "_exists", false);
     }
 
-    // Clear a specific state slot
     public void clearState(int slot) {
         if (slot < 1 || slot > MAX_STATES) {
             return;
@@ -105,7 +99,6 @@ public class ObjectStateManager {
         editor.apply();
     }
 
-    // Clear all saved states
     public void clearAllStates() {
         SharedPreferences.Editor editor = prefs.edit();
         editor.clear();

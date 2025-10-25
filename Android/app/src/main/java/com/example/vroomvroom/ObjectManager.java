@@ -18,7 +18,6 @@ public class ObjectManager {
     private Context context;
     private ObjectUpdateListener listener;
 
-    // Object position tracking - EXPANDED TO 8
     private int object1X = -1, object1Y = -1;
     private int object2X = -1, object2Y = -1;
     private int object3X = -1, object3Y = -1;
@@ -37,7 +36,6 @@ public class ObjectManager {
     private boolean object7Placed = false;
     private boolean object8Placed = false;
 
-    // Object direction tracking - EXPANDED TO 8
     private String object1Direction = "N";
     private String object2Direction = "N";
     private String object3Direction = "N";
@@ -47,7 +45,6 @@ public class ObjectManager {
     private String object7Direction = "N";
     private String object8Direction = "N";
 
-    // Object target ID tracking - EXPANDED TO 8
     private int object1TargetId = 1;
     private int object2TargetId = 2;
     private int object3TargetId = 3;
@@ -57,7 +54,6 @@ public class ObjectManager {
     private int object7TargetId = 7;
     private int object8TargetId = 8;
 
-    // View references - EXPANDED TO 8
     private View object1DirectionView;
     private View object2DirectionView;
     private View object3DirectionView;
@@ -163,7 +159,6 @@ public class ObjectManager {
         setObjectPosition(objectType, -1, -1);
     }
 
-    // Direction Management
     public void setObjectDirection(String objectType, String direction) {
         switch (objectType) {
             case "OBJECT1":
@@ -222,7 +217,6 @@ public class ObjectManager {
         }
     }
 
-    // Target ID Management
     public void setObjectTargetId(String objectType, int targetId) {
         if (targetId < 1 || targetId > 40) {
             if (listener != null) {

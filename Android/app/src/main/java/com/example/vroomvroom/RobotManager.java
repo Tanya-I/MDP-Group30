@@ -30,7 +30,6 @@ public class RobotManager {
         this.listener = listener;
     }
 
-    // Position Management (sends Bluetooth - for drag/drop operations)
     public void setRobotPosition(int x, int y) {
         if (x == -1 && y == -1) {
             // Handle off-grid position - robot is not on the grid
@@ -68,7 +67,6 @@ public class RobotManager {
         }
     }
 
-    // NEW: Position management without sending Bluetooth (for movement commands)
     private void setRobotPositionNoSend(int x, int y) {
         if (x == -1 && y == -1) {
             // Handle off-grid position - robot is not on the grid
@@ -122,7 +120,6 @@ public class RobotManager {
         }
     }
 
-    // NEW: Direction change without sending Bluetooth (for movement commands)
     private void setRobotDirectionNoSend(String direction) {
         if (isValidDirection(direction)) {
             String oldDirection = robotDirection;
@@ -139,7 +136,6 @@ public class RobotManager {
         }
     }
 
-    // Method for Bluetooth updates that shouldn't be sent back
     public void setRobotPositionFromBluetooth(int x, int y, String direction) {
         boolean positionChanged = false;
         boolean directionChanged = false;
@@ -194,7 +190,6 @@ public class RobotManager {
         }
     }
 
-    // New method to set both position and direction at once (for user interactions)
     public void setRobotPositionAndDirection(int x, int y, String direction) {
         boolean positionChanged = false;
         boolean directionChanged = false;
@@ -243,13 +238,11 @@ public class RobotManager {
             }
         }
 
-        // Notify position change if either position or direction changed
         if ((positionChanged || directionChanged) && listener != null) {
             listener.onRobotPositionChanged(robotX, robotY, robotDirection);
         }
     }
 
-    // Movement - moves forward in current direction (NO BLUETOOTH SENDING)
     public boolean moveRobot() {
         int newX = robotX;
         int newY = robotY;
@@ -280,7 +273,6 @@ public class RobotManager {
         }
     }
 
-    // Updated method for relative directional movement (NO BLUETOOTH SENDING)
     public boolean moveRobotInDirection(String relativeDirection) {
         switch (relativeDirection) {
             case "FORWARD":
@@ -303,7 +295,6 @@ public class RobotManager {
         }
     }
 
-    // Method for absolute directional movement (if still needed)
     public boolean moveRobotToAbsoluteDirection(String absoluteDirection) {
         // If robot is already facing the direction, just move forward
         if (robotDirection.equals(absoluteDirection)) {
@@ -327,7 +318,6 @@ public class RobotManager {
         }
     }
 
-    // New method for moving backward (NO BLUETOOTH SENDING)
     public boolean moveBackward() {
         int newX = robotX;
         int newY = robotY;
@@ -359,7 +349,6 @@ public class RobotManager {
         }
     }
 
-    // New turning methods with arc movement (NO BLUETOOTH SENDING)
     public boolean turnLeft() {
         String newDirection = getLeftDirection(robotDirection);
         return performTurn(newDirection, "left");
@@ -375,7 +364,6 @@ public class RobotManager {
         int newX = robotX;
         int newY = robotY;
 
-        // Corrected arc movement logic - smaller movements for more precise control, accounting for 2x2 robot size
         switch (robotDirection) {
             case "N": // Facing North
                 if (turnType.equals("right")) {
@@ -515,7 +503,6 @@ public class RobotManager {
         return "(" + robotX + ", " + robotY + ", " + robotDirection + ")";
     }
 
-    // Validation - updated for 2x2 robot size
     private boolean isValidPosition(int x, int y) {
         if (x == -1 && y == -1) return true; // Off-grid position
         // Check that both the robot's position and its 2x2 footprint fit within bounds

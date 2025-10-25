@@ -14,7 +14,7 @@ public class CustomGridView extends View {
     private Paint gridPaint;
     private Paint robotPaint;
     private Paint pathPaint;
-    private Paint hoverPaint; // NEW: Paint for hover highlighting
+    private Paint hoverPaint;
     private int gridSize = 20;
     private float cellWidth;
     private float cellHeight;
@@ -62,7 +62,6 @@ public class CustomGridView extends View {
         pathPaint.setStyle(Paint.Style.FILL);
         pathPaint.setAntiAlias(true);
 
-        // NEW: Initialize hover paint with semi-transparent yellow
         hoverPaint = new Paint();
         hoverPaint.setColor(0x80FFFF00); // 50% opacity yellow
         hoverPaint.setStyle(Paint.Style.FILL);
@@ -109,7 +108,7 @@ public class CustomGridView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        // Fallback calculation if TableLayout reference isn't available
+        // Fallback
         if (!isInitialized && tableLayoutReference == null) {
             cellWidth = w / 21.0f;
             cellHeight = h / 21.0f;
@@ -125,25 +124,20 @@ public class CustomGridView extends View {
 
         if (!isInitialized || cellWidth <= 0 || cellHeight <= 0) return;
 
-        // Draw the visited path cells first (so they appear behind everything)
         drawVisitedCells(canvas);
 
-        // NEW: Draw the hover highlight (row and column) before grid lines
         if (isHovering && hoverX >= 0 && hoverY >= 0) {
             drawHoverHighlight(canvas);
         }
 
-        // Draw the grid lines over the data area only (20x20 grid, excluding labels)
         float gridWidth = gridSize * cellWidth;
         float gridHeight = gridSize * cellHeight;
 
-        // Draw vertical grid lines
         for (int i = 0; i <= gridSize; i++) {
             float x = gridStartX + (i * cellWidth);
             canvas.drawLine(x, gridStartY, x, gridStartY + gridHeight, gridPaint);
         }
 
-        // Draw horizontal grid lines
         for (int i = 0; i <= gridSize; i++) {
             float y = gridStartY + (i * cellHeight);
             canvas.drawLine(gridStartX, y, gridStartX + gridWidth, y, gridPaint);
@@ -165,32 +159,26 @@ public class CustomGridView extends View {
         }
     }
 
-    // NEW: Draw hover highlight for entire row and column
     private void drawHoverHighlight(Canvas canvas) {
         if (hoverX < 0 || hoverX >= gridSize || hoverY < 0 || hoverY >= gridSize) {
             return;
         }
 
-        // Convert logical coordinates to visual coordinates
         int visualX = hoverX;
         int visualY = gridSize - 1 - hoverY; // Flip Y axis
 
-        // Draw the entire row (horizontal strip)
         float rowY = gridStartY + (visualY * cellHeight);
         canvas.drawRect(gridStartX, rowY,
                 gridStartX + (gridSize * cellWidth), rowY + cellHeight,
                 hoverPaint);
 
-        // Draw the entire column (vertical strip)
         float colX = gridStartX + (visualX * cellWidth);
         canvas.drawRect(colX, gridStartY,
                 colX + cellWidth, gridStartY + (gridSize * cellHeight),
                 hoverPaint);
     }
 
-    // NEW: Set hover position (called during drag)
     public void setHoverPosition(int x, int y) {
-        // Only update and redraw if the position actually changed
         if (hoverX != x || hoverY != y || !isHovering) {
             hoverX = x;
             hoverY = y;
@@ -209,7 +197,6 @@ public class CustomGridView extends View {
         }
     }
 
-    // NEW: Set hover color (optional, allows customization)
     public void setHoverColor(int color) {
         hoverPaint.setColor(color);
         if (isHovering) {
@@ -221,17 +208,12 @@ public class CustomGridView extends View {
         this.robotX = x;
         this.robotY = y;
 
-        // Add 2x2 area to visited cells if it's a valid grid position
-        // Robot coordinate (x,y) represents the bottom-left corner of the 2x2 area
         if (x >= 0 && y >= 0 && x < gridSize - 1 && y < gridSize - 1) {
-            // Add all four cells of the 2x2 area
             visitedCells.add(x + "," + y);           // bottom-left
             visitedCells.add((x + 1) + "," + y);     // bottom-right
             visitedCells.add(x + "," + (y + 1));     // top-left
             visitedCells.add((x + 1) + "," + (y + 1)); // top-right
         } else if (x >= 0 && y >= 0 && x < gridSize && y < gridSize) {
-            // Handle edge cases where robot is at boundary
-            // Add cells that are within bounds
             if (x < gridSize && y < gridSize) {
                 visitedCells.add(x + "," + y);
             }
@@ -260,8 +242,6 @@ public class CustomGridView extends View {
     }
 
     public int getVisitedCellCount() {
-        // Return the count of 2x2 areas visited, not individual cells
-        // This is a bit complex since we store individual cells but want to count 2x2 areas
         Set<String> visitedAreas = new HashSet<>();
 
         for (String cellKey : visitedCells) {
@@ -289,25 +269,21 @@ public class CustomGridView extends View {
     public int[] getGridCoordinatesFromScreenPosition(float screenX, float screenY) {
         if (!isInitialized) return null;
 
-        // Get this view's position on screen
         int[] viewLocation = new int[2];
         getLocationOnScreen(viewLocation);
 
-        // Convert screen coordinates to view-relative coordinates
         float viewRelativeX = screenX - viewLocation[0];
         float viewRelativeY = screenY - viewLocation[1];
 
-        // Adjust for the grid offset (skip Y-label column)
         float adjustedX = viewRelativeX - gridStartX;
         float adjustedY = viewRelativeY - gridStartY;
 
-        // Calculate grid cell position
+
         int visualX = (int) (adjustedX / cellWidth);
         int visualY = (int) (adjustedY / cellHeight);
 
-        // Check if within valid grid bounds
         if (visualX >= 0 && visualX < gridSize && visualY >= 0 && visualY < gridSize) {
-            // Convert visual coordinates to logical coordinates (flip Y axis)
+
             int logicalX = visualX;
             int logicalY = gridSize - 1 - visualY;
 
@@ -324,11 +300,10 @@ public class CustomGridView extends View {
             return null;
         }
 
-        // Convert logical coordinates to visual coordinates
+
         int visualX = logicalX;
         int visualY = gridSize - 1 - logicalY; // Flip Y axis
 
-        // Calculate position (accounting for grid start offset)
         float x = gridStartX + (visualX * cellWidth);
         float y = gridStartY + (visualY * cellHeight);
 
